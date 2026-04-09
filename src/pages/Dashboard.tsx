@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Shield, Check, ArrowRight, Star, SlidersHorizontal, Car, Heart, Home, Plane, Briefcase, Globe, Zap, BadgeCheck, Clock, X, ChevronDown } from 'lucide-react';
+import Spinner from '../components/Spinner';
 
 interface Policy {
   id: string;
@@ -274,20 +275,18 @@ const Dashboard: React.FC = () => {
             ))}
           </div>
         </div>
-        {/* Filter panel */}
-        {filterOpen && (
-          <div className="relative z-10 mx-10 lg:mx-14 mb-6 rounded-2xl p-5"
+        {/* Filter panel — always mounted, CSS transition for smooth open/close */}
+        <div className={`filter-panel ${filterOpen ? 'open' : 'closed'}`}>
+          <div className="mx-10 lg:mx-14 mb-6 rounded-2xl p-5"
             style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.2)' }}>
             <div className="flex items-center justify-between mb-4">
               <p className="text-white font-bold text-[15px]">Filter & Sort</p>
-              <div className="flex items-center gap-3">
-                {activeFilterCount > 0 && (
-                  <button onClick={resetFilters}
-                    className="flex items-center gap-1.5 text-[12px] font-semibold text-indigo-200 hover:text-white transition-colors">
-                    <X className="w-3.5 h-3.5" /> Reset all
-                  </button>
-                )}
-              </div>
+              {activeFilterCount > 0 && (
+                <button onClick={resetFilters}
+                  className="flex items-center gap-1.5 text-[12px] font-semibold text-indigo-200 hover:text-white transition-colors">
+                  <X className="w-3.5 h-3.5" /> Reset all
+                </button>
+              )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {/* Sort */}
@@ -369,8 +368,9 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
+
 
       {/* ── Category Filter ─────────────────────────── */}
       <div className="flex gap-2 flex-wrap">
@@ -392,24 +392,9 @@ const Dashboard: React.FC = () => {
 
       {/* ── Cards ───────────────────────────────────── */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="card p-7 animate-pulse">
-              <div className="flex gap-3 mb-6">
-                <div className="w-11 h-11 rounded-2xl" style={{ background: '#F1F5F9' }} />
-                <div className="flex-1">
-                  <div className="h-5 rounded-lg mb-2 w-2/3" style={{ background: '#F1F5F9' }} />
-                  <div className="h-3.5 rounded w-1/2" style={{ background: '#F1F5F9' }} />
-                </div>
-              </div>
-              <div className="h-9 rounded-lg mb-1.5 w-1/3" style={{ background: '#E8EDF2' }} />
-              <div className="h-4 rounded mb-6 w-2/5" style={{ background: '#F1F5F9' }} />
-              <div className="space-y-2.5 mb-7">
-                {[...Array(3)].map((_, j) => <div key={j} className="h-4 rounded" style={{ background: '#F1F5F9' }} />)}
-              </div>
-              <div className="h-11 rounded-2xl" style={{ background: '#F1F5F9' }} />
-            </div>
-          ))}
+        <div className="flex flex-col items-center justify-center py-24 gap-5">
+          <Spinner size={52} color="#6366f1" label="Loading plans..." />
+          <p className="text-[15px] font-semibold text-gray-400">Fetching the best plans for you…</p>
         </div>
       ) : (
         <div className="space-y-6">
