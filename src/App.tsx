@@ -18,25 +18,35 @@ const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.Re
 
 const AppRoutes = () => {
   const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
   return (
     <div className="min-h-screen">
-      <Navbar />
-      {/* key re-mounts the wrapper on each route change → smooth fade-in */}
-      <main
-        key={location.pathname}
-        className="max-w-7xl mx-auto px-6 lg:px-10 py-10 page-enter"
-      >
+      {/* Navbar hidden on auth pages since they're full-screen */}
+      {!isAuthPage && <Navbar />}
+
+      {isAuthPage ? (
+        /* Auth pages use fixed inset-0 — render WITHOUT any transform wrapper
+           to avoid the "transform breaks fixed positioning" bug */
         <Routes location={location}>
           <Route path="/login"    element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/"         element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/purchase/:policyId" element={<ProtectedRoute><Purchase /></ProtectedRoute>} />
-          <Route path="/my-policies"        element={<ProtectedRoute><MyPolicies /></ProtectedRoute>} />
-          <Route path="/admin"              element={<ProtectedRoute requireAdmin><AdminPanel /></ProtectedRoute>} />
-          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </main>
+      ) : (
+        /* Regular pages get the smooth page-enter fade */
+        <main
+          key={location.pathname}
+          className="max-w-7xl mx-auto px-6 lg:px-10 py-10 page-enter"
+        >
+          <Routes location={location}>
+            <Route path="/"         element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/purchase/:policyId" element={<ProtectedRoute><Purchase /></ProtectedRoute>} />
+            <Route path="/my-policies"        element={<ProtectedRoute><MyPolicies /></ProtectedRoute>} />
+            <Route path="/admin"              element={<ProtectedRoute requireAdmin><AdminPanel /></ProtectedRoute>} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      )}
     </div>
   );
 };
