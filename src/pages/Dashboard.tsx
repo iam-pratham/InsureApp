@@ -392,7 +392,7 @@ const Dashboard: React.FC = () => {
 
       {/* ── Cards ───────────────────────────────────── */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-5">
+        <div className="flex flex-col items-center justify-center pt-8 pb-20 gap-5">
           <Spinner size={52} color="#6366f1" label="Loading plans..." />
           <p className="text-[15px] font-semibold text-gray-400">Fetching the best plans for you…</p>
         </div>
